@@ -1,8 +1,7 @@
-for i in range (1, a):
-    
-def delitelnost(a):
-    if a % b == 0:
-        print(b)
+def delitelnost(cislo): 
+    for i in range (1, cislo):
+        if cislo % i == 0:
+            print(i)
 
-
-a = int(input("Zadej číslo"))
+cislo = int(input("zadej cislo "))
+delitelnost(cislo)
