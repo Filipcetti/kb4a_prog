@@ -1,5 +1,6 @@
 import csv
 from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
 
 vstupy = []
 vystupy = []
@@ -29,18 +30,30 @@ with open(cesta, encoding="utf-8") as soubor:
         spotreba = float(radek["mpg"])
         objem_motoru = float(radek["engineSize"])
 
-        cena = int(float(radek["price"]) / 1000)  
+        cena = round(float(radek["price"]) / 10000)
+
         vstupy.append([model, prevodovka, palivo, rok, najezd, dan, spotreba, objem_motoru])
         vystupy.append(cena)
 
+
+train_X, test_X, train_Y, test_Y = train_test_split(vstupy, vystupy, test_size=0.2)
+
 sit = MLPClassifier(hidden_layer_sizes=(10,), max_iter=500)
 
-sit.fit(vstupy, vystupy)
+sit.fit(train_X, train_Y)
  
 predikce = sit.predict([vstupy[0]])
 
-print("Predikovaná cena (v tisících):", predikce[0])
-print("Predikovaná cena:", predikce[0] * 1000, "Kč")
+print("Predikovaná cena (v desítkách tisíc):", predikce[0])
+print("Predikovaná cena:", predikce[0] * 10000, "Kč")
+
+results = sit.predict(test_X)
+
+correct = 0
+for i in range(len(results)):
+    if test_Y[i] == results[i]:
+        correct += 1
+print("Přesnost:", correct / len(results))
 
 
 # Program jednoduché neuronové sítě na odhad ceny auta mercedes podle jeho parametrů. 
